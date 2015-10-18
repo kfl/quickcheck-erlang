@@ -10,7 +10,7 @@
 
 % not a good function for checking dict:fetch_keys, because it consider 0 and 0.0 equal make your own
 no_duplicates(Lst) ->
-    length(Lst) == length(lists:usort(Lst)).
+    length(Lst) =:= length(lists:usort(Lst)).
 
 prop_unique_keys() ->
     ?FORALL(D,dict(),
