@@ -85,8 +85,8 @@ next_state(S,_V,_) ->
 %%% Preconditions
 
 %% For positive testing, uncomment the following clause
-%precondition(S,{call,_,unregister,[Name]}) -> 
-%    unregister_ok(S,Name);
+precondition(S,{call,_,unregister,[Name]}) -> 
+    unregister_ok(S,Name);
 
 precondition(_S,{call,_,_,_}) ->
     true.
