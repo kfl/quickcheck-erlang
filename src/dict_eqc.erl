@@ -12,9 +12,14 @@
 no_duplicates(Lst) ->
     length(Lst) =:= length(lists:usort(Lst)).
 
+nub ([]) -> [];
+nub ([X|XS]) ->
+    [X | nub([Y || Y <- XS,
+                   Y =/= X])].
+
 prop_unique_keys() ->
     ?FORALL(D,dict(),
-	    no_duplicates(dict:fetch_keys(eval(D)))).
+	    nub(dict:fetch_keys(eval(D)))).
 
 dict() ->
     dict_2().
