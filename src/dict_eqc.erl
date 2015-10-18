@@ -12,19 +12,9 @@
 no_duplicates(Lst) ->
     length(Lst) =:= length(lists:usort(Lst)).
 
-nub ([]) ->
-    [];
-nub ([X|XS]) ->
-    [X | nub([Y || Y <- XS,
-                   Y =/= X])].
-
-no_duplicates2(Lst) ->
-    length(Lst) =:= length(nub(Lst)).
-
-
 prop_unique_keys() ->
     ?FORALL(D,dict(),
-	    no_duplicates2(dict:fetch_keys(eval(D)))).
+	    no_duplicates(dict:fetch_keys(eval(D)))).
 
 dict() ->
     dict_2().
@@ -32,15 +22,15 @@ dict() ->
 dict_0() ->
     ?LAZY(
        oneof([dict:new(),
-	      ?LET({K,V,D},{key(), value(), dict_0()},
-               dict:store(K,V,D))])
+              ?LET({K,V,D},{key(), value(), dict_0()},
+                   dict:store(K,V,D))])
       ).
 
 dict_1() ->
     ?LAZY(
        oneof([{call,dict,new,[]},
-	      ?LETSHRINK([D],[dict_1()],
-                     {call,dict,store,[key(),value(),D]})])
+              ?LETSHRINK([D],[dict_1()],
+                         {call,dict,store,[key(),value(),D]})])
       ).
 
 dict_2() ->
