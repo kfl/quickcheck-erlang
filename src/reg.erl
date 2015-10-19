@@ -41,12 +41,22 @@ initial_state() ->
 
 
 %%% Take 1
+%% command(S) ->
+%%       oneof(
+%%         [{call,erlang,register, [name(),pid(S)]},
+%%          {call,erlang,unregister,[name()]},
+%%          {call,?MODULE,spawn,[]},
+%%          {call,erlang,whereis,[name()]}]).
+
+%% Better implementation of command
 command(S) ->
-      oneof(
-        [{call,erlang,register, [name(),pid(S)]},
-         {call,erlang,unregister,[name()]},
-         {call,?MODULE,spawn,[]},
-         {call,erlang,whereis,[name()]}]).
+    oneof(
+      [{call,erlang,register, [name(),pid(S)]} 
+       || S#state.pids /= []] % small trick to make sure that pid(S) is only called when there are pids to choose
+      ++
+      [{call,erlang,unregister,[name()]}, % When neg testing instead use {call,?MODULE,unregister,[name()]},
+       {call,?MODULE,spawn,[]},
+       {call,erlang,whereis,[name()]}]).
 
 
 
