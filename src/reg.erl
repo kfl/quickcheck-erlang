@@ -41,23 +41,12 @@ initial_state() ->
 
 
 %%% Take 1
-%% command(S) ->
-%%       oneof(
-%%         [{call,erlang,register, [name(),pid(S)]},
-%%          {call,erlang,unregister,[name()]},
-%%          {call,?MODULE,spawn,[]},
-%%          {call,erlang,whereis,[name()]}]).
-
-%% Better implementation of command
 command(S) ->
-    oneof(
-      [{call,erlang,register, [name(),pid(S)]} 
-       || S#state.pids /= []] % small trick to make sure that pid(S) is only called when there are pids to choose
-      ++
-      [{call,erlang,unregister,[name()]}, % When neg testing instead use {call,?MODULE,unregister,[name()]},
-       {call,?MODULE,spawn,[]},
-       {call,erlang,whereis,[name()]}]).
-
+      oneof(
+        [{call,erlang,register, [name(),pid(S)]},
+         {call,erlang,unregister,[name()]},
+         {call,?MODULE,spawn,[]},
+         {call,erlang,whereis,[name()]}]).
 
 
 pid(S) ->
@@ -83,23 +72,10 @@ next_state(S,_V,_) ->
 
 %%% Preconditions
 
-%% For positive testing, uncomment the following clause
-%% precondition(S,{call,_,unregister,[Name]}) -> 
-%%     unregister_ok(S,Name);
-
 precondition(_S,{call,_,_,_}) ->
     true.
 
 %%% Postconditions
-
-%% For negative testing, uncomment the following clause. 
-%% REMEMBER to use the unregister function from this module in the command generator
-
-% postcondition(S,{call,_,unregister,[Name]},Res) -> 
-%     case Res of
-%         {'EXIT',_} -> not unregister_ok(S,Name);
-%         true       ->     unregister_ok(S,Name) 
-%     end;
 
 postcondition(_S,{call,_,_,_},_R) ->
     true.
