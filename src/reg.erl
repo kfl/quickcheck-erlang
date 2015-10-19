@@ -39,25 +39,14 @@ initial_state() ->
 
 %%% Command generator
 
-%% command(S) ->
-%%       oneof(
-%%         [{call,erlang,register, [name(),pid(S)]},
-%%          {call,erlang,unregister,[name()]},
-%%          {call,?MODULE,spawn,[]},
-%%          {call,erlang,whereis,[name()]}]).
 
-
-%% Better implementation of command
+%%% Take 1
 command(S) ->
-    oneof(
-      [{call,erlang,register, [name(),pid(S)]} 
-       || S#state.pids /= []] % small trick to make sure that pid(S) is only called when there are pids to choose
-      ++
-      [{call,erlang,unregister,[name()]}, % When neg testing instead use {call,?MODULE,unregister,[name()]},
-       {call,?MODULE,spawn,[]},
-       {call,erlang,whereis,[name()]}]).
-
-
+      oneof(
+        [{call,erlang,register, [name(),pid(S)]},
+         {call,erlang,unregister,[name()]},
+         {call,?MODULE,spawn,[]},
+         {call,erlang,whereis,[name()]}]).
 
 
 
@@ -85,8 +74,8 @@ next_state(S,_V,_) ->
 %%% Preconditions
 
 %% For positive testing, uncomment the following clause
-precondition(S,{call,_,unregister,[Name]}) -> 
-    unregister_ok(S,Name);
+%% precondition(S,{call,_,unregister,[Name]}) -> 
+%%     unregister_ok(S,Name);
 
 precondition(_S,{call,_,_,_}) ->
     true.
@@ -123,7 +112,7 @@ unregister(Name) ->
 
 stop(Pid) ->
     exit(Pid,kill),
-    timer:sleep(1).
+    erlang:yield().
 
 cleanup(S)->
     [catch erlang:unregister(N) || N<-names()], 
