@@ -1,5 +1,7 @@
 # Quickcheck Erlang
-Example code demonstrating how to use QuickCheck for Erlang.
+
+Example code demonstrating how to use QuickCheck for Erlang via
+Quviq's [QuickCheck CI](http://quickcheck-ci.com) service.
 
 ## Nice emblem
 
