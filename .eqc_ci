@@ -1,2 +1,2 @@
-{build, "cd ebin; erl -make"}.
+{build, "erl -make"}.
 {test_path, "ebin"}.

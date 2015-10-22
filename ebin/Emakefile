@@ -1,1 +1,0 @@
-{"../src/*", [{parse_transform, eqc_cover}]}.
