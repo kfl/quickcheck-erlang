@@ -4,7 +4,7 @@
 
 
 prop_too_much_dairy() ->
-    ?FORALL(Food, meal(), eqc:equals(dairy_count(Food), 0)).
+    ?FORALL(Food, correct_meal(), eqc:equals(dairy_count(Food), 0)).
 
 dairy_count(L) ->
     length([X || X <- L, is_dairy(X)]).
@@ -22,3 +22,11 @@ meal() ->
                 elements([lasagna, tofu, steak]),
                 elements([cake, chocolate, icecream])],
                [Appetizer, Drink, Entree, Desert]).
+
+correct_meal() ->
+    ?LETSHRINK([Appetizer, Drink, Entree, Desert],
+               [[elements([soup, salad, cheesesticks])],
+                [elements([coffee, tea, milk, water, juice])],
+                [elements([lasagna, tofu, steak])],
+                [elements([cake, chocolate, icecream])]],
+               Appetizer ++ Drink ++ Entree ++ Desert).
