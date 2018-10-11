@@ -4,7 +4,7 @@
 
 
 prop_too_much_dairy() ->
-    ?FORALL(Food, meal(), dairy_count(Food) == 0).
+    ?FORALL(Food, meal(), eqc:equals(dairy_count(Food), 0)).
 
 dairy_count(L) ->
     length([X || X <- L, is_dairy(X)]).
